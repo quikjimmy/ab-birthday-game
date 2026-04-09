@@ -97,7 +97,7 @@
 
   // --- Google Sheets API ---
   // REPLACE THIS with your deployed Google Apps Script web app URL
-  const SHEET_API = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+  const SHEET_API = 'https://script.google.com/macros/s/AKfycbxW4N9vuhy4PloV7t2M3XXKyz1fm0-zllj-cAJzvuLIwFVnpWu2pSjdiYTzXbI0iahjIg/exec';
 
   const sheetsEnabled = SHEET_API !== 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
