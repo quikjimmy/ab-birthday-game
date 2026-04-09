@@ -118,7 +118,7 @@
   async function fetchRemoteScores() {
     if (!sheetsEnabled) return null;
     try {
-      const res = await fetch(SHEET_API);
+      const res = await fetch(SHEET_API, { redirect: 'follow' });
       const data = await res.json();
       return data.scores || [];
     } catch (err) {
@@ -133,13 +133,11 @@
     local.push({ name, score: scoreVal, date: new Date().toISOString() });
     saveLocalScores(local);
 
-    // Save to Google Sheet
+    // Save to Google Sheet via GET workaround (Apps Script redirects break POST CORS)
     if (sheetsEnabled) {
       try {
-        await fetch(SHEET_API, {
-          method: 'POST',
-          body: JSON.stringify({ name, score: scoreVal }),
-        });
+        const params = new URLSearchParams({ action: 'save', name, score: scoreVal });
+        await fetch(`${SHEET_API}?${params}`, { redirect: 'follow' });
       } catch (err) {
         console.warn('Failed to save remote score:', err);
       }

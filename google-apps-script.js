@@ -5,8 +5,19 @@
 
 const SHEET_NAME = 'Sheet1';
 
-function doGet() {
+function doGet(e) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  const params = e ? e.parameter : {};
+
+  // If action=save, save the score via GET (CORS workaround)
+  if (params.action === 'save' && params.name && params.score !== undefined) {
+    sheet.appendRow([params.name, Number(params.score), new Date().toISOString()]);
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Otherwise return leaderboard
   const data = sheet.getDataRange().getValues();
   const headers = data.shift();
 
