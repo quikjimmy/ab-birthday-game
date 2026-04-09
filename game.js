@@ -51,13 +51,13 @@
       groundColor: '#29B6F6',
       groundAccent: '#0288D1',
       goodItems: [
-        { emoji: '\u2600\uFE0F', points: 10, tan: 8, speed: 2.5, size: 36 },
-        { emoji: '\u{1F576}\uFE0F', points: 15, tan: 5, speed: 2, size: 32 },
-        { emoji: '\u{1F9F4}', points: 20, tan: 12, speed: 1.8, size: 30 },
+        { emoji: '\u2600\uFE0F', points: 10, tan: 8, speed: 2.5, size: 52 },
+        { emoji: '\u{1F576}\uFE0F', points: 15, tan: 5, speed: 2, size: 48 },
+        { emoji: '\u{1F9F4}', points: 20, tan: 12, speed: 1.8, size: 46 },
       ],
       badItems: [
-        { emoji: '\u2601\uFE0F', points: -10, tan: -8, speed: 2, size: 38 },
-        { emoji: '\u{1F4A6}', points: -5, tan: -5, speed: 3, size: 28 },
+        { emoji: '\u2601\uFE0F', points: -10, tan: -8, speed: 2, size: 54 },
+        { emoji: '\u{1F4A6}', points: -5, tan: -5, speed: 3, size: 44 },
       ],
       spawnRate: 0.025,
       bgEmojis: ['\u{1F334}', '\u{1F3D6}\uFE0F', '\u{1F459}'],
@@ -73,16 +73,16 @@
       groundColor: '#FFE082',
       groundAccent: '#FFD54F',
       goodItems: [
-        { emoji: '\u2600\uFE0F', points: 10, tan: 7, speed: 3, size: 36 },
-        { emoji: '\u{1F576}\uFE0F', points: 15, tan: 5, speed: 2.5, size: 32 },
-        { emoji: '\u{1F9F4}', points: 25, tan: 15, speed: 2, size: 30 },
-        { emoji: '\u{1F379}', points: 20, tan: 10, speed: 2.2, size: 34 },
+        { emoji: '\u2600\uFE0F', points: 10, tan: 7, speed: 3, size: 52 },
+        { emoji: '\u{1F576}\uFE0F', points: 15, tan: 5, speed: 2.5, size: 48 },
+        { emoji: '\u{1F9F4}', points: 25, tan: 15, speed: 2, size: 46 },
+        { emoji: '\u{1F379}', points: 20, tan: 10, speed: 2.2, size: 50 },
       ],
       badItems: [
-        { emoji: '\u2601\uFE0F', points: -10, tan: -8, speed: 2.5, size: 38 },
-        { emoji: '\u{1F99C}', points: -15, tan: -10, speed: 3.5, size: 34 },
-        { emoji: '\u{1F30A}', points: -8, tan: -6, speed: 3, size: 36 },
-        { emoji: '\u2602\uFE0F', points: -20, tan: -15, speed: 1.8, size: 40 },
+        { emoji: '\u2601\uFE0F', points: -10, tan: -8, speed: 2.5, size: 54 },
+        { emoji: '\u{1F99C}', points: -15, tan: -10, speed: 3.5, size: 50 },
+        { emoji: '\u{1F30A}', points: -8, tan: -6, speed: 3, size: 52 },
+        { emoji: '\u2602\uFE0F', points: -20, tan: -15, speed: 1.8, size: 56 },
       ],
       spawnRate: 0.032,
       bgEmojis: ['\u{1F41A}', '\u{1F40B}', '\u{1F3C4}'],
@@ -142,16 +142,16 @@
 
   // --- Canvas sizing ---
   function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
     const hud = $('game-hud');
     const hudH = hud.getBoundingClientRect().height;
-    canvasW = rect.width;
-    canvasH = rect.height - hudH;
-    canvas.width = canvasW * devicePixelRatio;
-    canvas.height = canvasH * devicePixelRatio;
+    canvasW = window.innerWidth;
+    canvasH = window.innerHeight - hudH;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvasW * dpr;
+    canvas.height = canvasH * dpr;
     canvas.style.width = canvasW + 'px';
     canvas.style.height = canvasH + 'px';
-    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     andrea.y = canvasH - 90;
     andrea.x = Math.min(Math.max(andrea.x, 30), canvasW - 30);
   }
@@ -274,6 +274,24 @@
       ctx.save();
       ctx.translate(item.x, item.y);
       ctx.rotate(item.rotation);
+
+      // Glowing backdrop circle
+      const radius = item.size * 0.65;
+      const glow = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius);
+      if (item.good) {
+        glow.addColorStop(0, 'rgba(255, 235, 59, 0.5)');
+        glow.addColorStop(0.6, 'rgba(255, 193, 7, 0.25)');
+        glow.addColorStop(1, 'rgba(255, 193, 7, 0)');
+      } else {
+        glow.addColorStop(0, 'rgba(100, 100, 120, 0.45)');
+        glow.addColorStop(0.6, 'rgba(80, 80, 100, 0.2)');
+        glow.addColorStop(1, 'rgba(80, 80, 100, 0)');
+      }
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.fill();
+
       ctx.font = `${item.size}px serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -281,13 +299,22 @@
       ctx.restore();
     });
 
-    // Andrea (lounge chair + person)
-    ctx.font = '50px serif';
+    // Andrea — colored platform + large emojis
+    // Platform base so she's always visible
+    ctx.fillStyle = 'rgba(255, 180, 100, 0.6)';
+    ctx.beginPath();
+    ctx.roundRect(andrea.x - 40, andrea.y - 5, 80, 35, 10);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(200, 120, 50, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.font = '56px serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('\u{1F6CB}\uFE0F', andrea.x, andrea.y + 10);
-    ctx.font = '36px serif';
-    ctx.fillText('\u{1F469}\u200D\u{1F9B0}', andrea.x, andrea.y - 14);
+    ctx.fillText('\u{1F6CB}\uFE0F', andrea.x, andrea.y + 12);
+    ctx.font = '44px serif';
+    ctx.fillText('\u{1F469}', andrea.x, andrea.y - 20);
 
     // Combo display
     if (combo >= 3) {
@@ -353,7 +380,7 @@
     });
 
     // Collision detection
-    const hitDist = 45;
+    const hitDist = 55;
     items = items.filter((item) => {
       if (item.y > canvasH + 50) return false;
 
