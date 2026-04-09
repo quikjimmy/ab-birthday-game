@@ -1,0 +1,371 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #87CEEB;
+  touch-action: none;
+}
+
+.screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* START SCREEN */
+#screen-start {
+  background: linear-gradient(180deg, #FF9A56 0%, #FF6B35 30%, #FF4500 60%, #C73E00 100%);
+}
+
+.start-content {
+  text-align: center;
+  padding: 2rem;
+  max-width: 360px;
+}
+
+.sun-icon {
+  font-size: 5rem;
+  animation: pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.6));
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+h1 {
+  font-size: 3rem;
+  color: #fff;
+  text-shadow: 2px 3px 0 rgba(0,0,0,0.2);
+  margin: 0.2rem 0;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #FFE0C0;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.birthday-msg {
+  font-size: 0.95rem;
+  color: #FFF3E0;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+#player-name {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.95);
+  color: #333;
+  text-align: center;
+  outline: none;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+#player-name::placeholder {
+  color: #aaa;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  letter-spacing: 1px;
+  transition: transform 0.1s, opacity 0.15s;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #6B3000;
+  box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+/* LEVEL INTRO */
+#screen-level-intro {
+  background: linear-gradient(180deg, #4FC3F7 0%, #29B6F6 50%, #0288D1 100%);
+}
+
+.level-intro-content {
+  text-align: center;
+  padding: 2rem;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.level-emoji {
+  font-size: 5rem;
+  margin-bottom: 0.5rem;
+}
+
+.level-intro-content h2 {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.level-intro-content p {
+  color: #E1F5FE;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* GAME SCREEN */
+#screen-game {
+  background: #87CEEB;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#game-hud {
+  padding: 8px 12px;
+  padding-top: max(env(safe-area-inset-top, 8px), 8px);
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 20;
+}
+
+.hud-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hud-label {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.hud-value {
+  font-size: 1.3rem;
+  color: #fff;
+  font-weight: 800;
+}
+
+.tan-meter-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tan-meter-label {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tan-meter-bg {
+  flex: 1;
+  height: 12px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.tan-meter-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #FFECD2, #D4A574, #8B6914);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+#game-canvas {
+  flex: 1;
+  display: block;
+  width: 100%;
+}
+
+/* LEVEL COMPLETE */
+#screen-level-complete {
+  background: linear-gradient(180deg, #FFD54F 0%, #FFB300 50%, #FF8F00 100%);
+}
+
+.level-complete-content {
+  text-align: center;
+  padding: 2rem;
+  animation: slideUp 0.4s ease-out;
+}
+
+.complete-emoji {
+  font-size: 5rem;
+}
+
+.level-complete-content h2 {
+  font-size: 2rem;
+  color: #fff;
+  margin: 0.5rem 0;
+}
+
+.level-complete-content p {
+  color: #FFF8E1;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* GAME OVER */
+#screen-gameover {
+  background: linear-gradient(180deg, #FF9A56 0%, #FF6B35 50%, #E64A19 100%);
+}
+
+.gameover-content {
+  text-align: center;
+  padding: 2rem;
+  animation: slideUp 0.4s ease-out;
+}
+
+.gameover-emoji {
+  font-size: 5rem;
+}
+
+.gameover-content h2 {
+  font-size: 2rem;
+  color: #fff;
+  margin: 0.5rem 0;
+}
+
+.gameover-content p {
+  color: #FFE0C0;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.final-score {
+  font-size: 2.5rem !important;
+  font-weight: 800;
+  color: #FFD700 !important;
+  margin: 1rem 0 !important;
+}
+
+/* LEADERBOARD */
+#screen-leaderboard {
+  background: linear-gradient(180deg, #5C6BC0 0%, #3949AB 50%, #283593 100%);
+}
+
+.leaderboard-content {
+  text-align: center;
+  padding: 2rem;
+  width: 100%;
+  max-width: 380px;
+  animation: slideUp 0.4s ease-out;
+}
+
+.leaderboard-content h2 {
+  font-size: 2rem;
+  color: #FFD700;
+  margin-bottom: 1.5rem;
+}
+
+#leaderboard-list {
+  max-height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+}
+
+.lb-entry {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  color: #fff;
+}
+
+.lb-entry.gold { background: rgba(255, 215, 0, 0.25); }
+.lb-entry.silver { background: rgba(192, 192, 192, 0.2); }
+.lb-entry.bronze { background: rgba(205, 127, 50, 0.2); }
+
+.lb-rank {
+  font-size: 1.3rem;
+  font-weight: 800;
+  width: 40px;
+  text-align: center;
+}
+
+.lb-name {
+  flex: 1;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.lb-score {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #FFD700;
+}
+
+.lb-empty {
+  color: rgba(255,255,255,0.5);
+  font-style: italic;
+  padding: 2rem;
+}

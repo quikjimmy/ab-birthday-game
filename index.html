@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Tan Time! Andrea's Birthday Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- START SCREEN -->
+  <div id="screen-start" class="screen active">
+    <div class="start-content">
+      <div class="sun-icon">&#9728;&#65039;</div>
+      <h1>Tan Time!</h1>
+      <p class="subtitle">Andrea's Birthday Game</p>
+      <p class="birthday-msg">Happy Birthday Andrea! Here's to another year of perfect tans and sunny days!</p>
+      <input type="text" id="player-name" placeholder="Enter your name" maxlength="16" autocomplete="off">
+      <button id="btn-play" class="btn btn-primary" disabled>PLAY</button>
+      <button id="btn-leaderboard" class="btn btn-secondary">Leaderboard</button>
+    </div>
+  </div>
+
+  <!-- LEVEL INTRO SCREEN -->
+  <div id="screen-level-intro" class="screen">
+    <div class="level-intro-content">
+      <div class="level-emoji" id="level-emoji"></div>
+      <h2 id="level-title"></h2>
+      <p id="level-desc"></p>
+      <button id="btn-start-level" class="btn btn-primary">LET'S GO!</button>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="screen-game" class="screen">
+    <div id="game-hud">
+      <div class="hud-row">
+        <div class="hud-item">
+          <span class="hud-label" id="hud-level">Level 1</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Score</span>
+          <span class="hud-value" id="hud-score">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Time</span>
+          <span class="hud-value" id="hud-time">30</span>
+        </div>
+      </div>
+      <div class="tan-meter-container">
+        <div class="tan-meter-label">Tan Meter</div>
+        <div class="tan-meter-bg">
+          <div class="tan-meter-fill" id="tan-meter-fill"></div>
+        </div>
+      </div>
+    </div>
+    <canvas id="game-canvas"></canvas>
+  </div>
+
+  <!-- LEVEL COMPLETE SCREEN -->
+  <div id="screen-level-complete" class="screen">
+    <div class="level-complete-content">
+      <div class="complete-emoji">&#127881;</div>
+      <h2 id="complete-title">Level Complete!</h2>
+      <p id="complete-score"></p>
+      <p id="complete-tan"></p>
+      <button id="btn-next-level" class="btn btn-primary">Next Level</button>
+    </div>
+  </div>
+
+  <!-- GAME OVER SCREEN -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-content">
+      <div class="gameover-emoji" id="gameover-emoji"></div>
+      <h2 id="gameover-title"></h2>
+      <p id="gameover-msg"></p>
+      <p class="final-score" id="gameover-score"></p>
+      <button id="btn-replay" class="btn btn-primary">Play Again</button>
+      <button id="btn-go-leaderboard" class="btn btn-secondary">Leaderboard</button>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD SCREEN -->
+  <div id="screen-leaderboard" class="screen">
+    <div class="leaderboard-content">
+      <h2>Leaderboard</h2>
+      <div id="leaderboard-list"></div>
+      <button id="btn-back" class="btn btn-secondary">Back</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
