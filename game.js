@@ -95,8 +95,14 @@
     screens[name].classList.add('active');
   }
 
+  // --- Google Sheets API ---
+  // REPLACE THIS with your deployed Google Apps Script web app URL
+  const SHEET_API = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+  const sheetsEnabled = SHEET_API !== 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
   // --- Leaderboard ---
-  function getScores() {
+  function getLocalScores() {
     try {
       return JSON.parse(localStorage.getItem('tantime_scores') || '[]');
     } catch {
@@ -104,20 +110,58 @@
     }
   }
 
-  function saveScore(name, score) {
-    const scores = getScores();
-    scores.push({ name, score, date: new Date().toISOString() });
+  function saveLocalScores(scores) {
     scores.sort((a, b) => b.score - a.score);
     localStorage.setItem('tantime_scores', JSON.stringify(scores.slice(0, 20)));
   }
 
-  function renderLeaderboard() {
-    const scores = getScores();
+  async function fetchRemoteScores() {
+    if (!sheetsEnabled) return null;
+    try {
+      const res = await fetch(SHEET_API);
+      const data = await res.json();
+      return data.scores || [];
+    } catch (err) {
+      console.warn('Failed to fetch remote scores:', err);
+      return null;
+    }
+  }
+
+  async function saveScore(name, scoreVal) {
+    // Always save locally
+    const local = getLocalScores();
+    local.push({ name, score: scoreVal, date: new Date().toISOString() });
+    saveLocalScores(local);
+
+    // Save to Google Sheet
+    if (sheetsEnabled) {
+      try {
+        await fetch(SHEET_API, {
+          method: 'POST',
+          body: JSON.stringify({ name, score: scoreVal }),
+        });
+      } catch (err) {
+        console.warn('Failed to save remote score:', err);
+      }
+    }
+  }
+
+  async function renderLeaderboard() {
     const list = $('leaderboard-list');
+    list.innerHTML = '<p class="lb-empty">Loading...</p>';
+
+    // Try remote first, fall back to local
+    let scores = await fetchRemoteScores();
+    if (!scores) {
+      scores = getLocalScores();
+    }
+
     if (scores.length === 0) {
       list.innerHTML = '<p class="lb-empty">No scores yet. Be the first!</p>';
       return;
     }
+
+    scores.sort((a, b) => b.score - a.score);
     const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
     const classes = ['gold', 'silver', 'bronze'];
     list.innerHTML = scores
